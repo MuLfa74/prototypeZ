@@ -20,7 +20,7 @@ type User struct {
 
 func (r *Repository) CreateUser(email, passwordHash string) error {
 	_, err := r.db.Exec(`
-        INSERT INTO users (email, password_hash)
+        INSERT INTO users (login, password)
         VALUES (?, ?)
     `, email, passwordHash)
 	return err
