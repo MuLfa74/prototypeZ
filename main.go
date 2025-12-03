@@ -7,6 +7,7 @@ import (
 	"prototypeZ/config"
 	"prototypeZ/database"
 	"prototypeZ/internal/games"
+	"prototypeZ/internal/requests"
 )
 
 func main() {
@@ -21,12 +22,13 @@ func main() {
 		w.Write([]byte("pong"))
 	})
 	// Парсим шаблоны
-	// Games
 	tpl := template.Must(template.ParseGlob("internal/templates/*.html"))
 	games.InitTemplates(tpl)
+	requests.InitTemplates(tpl)
 
 	// Роут
 	http.HandleFunc("/games", games.GamesHandler)
+	http.HandleFunc("/requests", requests.RequestsHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Server started on :8080")
