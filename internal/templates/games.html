@@ -1,21 +1,44 @@
-{{ define "games_page" }}
-{{ template "header" . }}
-<link rel="stylesheet" href="/static/games.css">
-<div class="games-container">
-    <h2>Список игр</h2>
-    <div class="games-list">
-        {{ range . }}
-        <a href="/requests?game_id={{ .ID }}">
-            <div class="game-card">
-                <h3 class="game-title">{{ .Title }}</h3>
-                <p class="game-genre">Жанр: {{ .Genre }}</p>
-                <p class="game-rating">Рейтинг: {{ if .Rating }}Есть{{ else }}Нет{{ end }}</p>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>prototypeZ</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/games.css">
+</head>
+<body>
+    <header>
+        <h1>PrototypeZ</h1>
+        <div class="header-buttons">
+            <button onclick="location.href='chat.html'" id="massage">a</button>
+            <button onclick="location.href='profile.html'" id="profile">b</button>
+            <button onclick="location.href='login.html'" id="enter">Войти</button>
+        </div>
+    </header>
+
+    <main>
+        <body>
+            <div class="games-container">
+            <h2>Список игр</h2>
+            <div class="games-list">
+                {{ range . }}
+                <a href="/requests?game_id={{ .ID }}">
+                    <div class="game-card">
+                        <h3 class="game-title">{{ .Title }}</h3>
+                        <p class="game-genre">Жанр: {{ .Genre }}</p>
+                        <p class="game-rating">Рейтинг: {{ if .Rating }}Есть{{ else }}Нет{{ end }}</p>
+                    </div>
+                </a>
+                {{ else }}
+                <p>Нет игр</p>
+                {{ end }}
             </div>
-        </a>
-        {{ else }}
-        <p>Нет игр</p>
-        {{ end }}
-    </div>
-</div>
-{{ template "footer" . }}
-{{ end }}
+        </div>
+    </main>
+
+    <footer>
+        <p>Контакты: Телефон | Telegram | Почта</p>
+    </footer>
+</body>
+</html>
