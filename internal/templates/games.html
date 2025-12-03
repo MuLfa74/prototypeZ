@@ -1,0 +1,17 @@
+{{ define "content" }}
+<link rel="stylesheet" href="/static/games.css">
+<div class="games-container">
+    <h2>Список игр</h2>
+    <div class="games-list">
+        {{ range . }}
+        <div class="game-card">
+            <h3 class="game-title">{{ .Title }}</h3>
+            <p class="game-genre">Жанр: {{ .Genre }}</p>
+            <p class="game-rating">Рейтинг: {{ if .Rating }}Есть{{ else }}Нет{{ end }}</p>
+        </div>
+        {{ else }}
+        <p>Нет игр</p>
+        {{ end }}
+    </div>
+</div>
+{{ end }}

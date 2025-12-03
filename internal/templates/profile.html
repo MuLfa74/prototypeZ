@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя</title>
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+<body>
+    <div class="profile-container">
+        <h2>Ваш профиль</h2>
+        <form action="../templates/profile.html" method="POST">
+            <input type="text" id="age" name="age" placeholder="Возраст" required>
+            <input type="text" id="gender" name="gender" placeholder="Пол" required>
+            <input type="text" id="prime-time" name="prime-time" placeholder="Прайм-тайм" required>
+            <input type="text" id="contact" name="contact" placeholder="Контакты" required>
+            <input type="text" id="games" name="games" placeholder="Предпочитаемые игры" required>
+            <button type="submit">Сохранить изменения</button>
+        </form>
+    </div>
+    <script src="../js/profile.js"></script>
+</body>
+</html>

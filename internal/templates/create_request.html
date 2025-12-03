@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание заявки</title>
+    <link rel="stylesheet" href="../css/create-request.css">
+</head>
+<body>
+    <div class="create-request-container">
+        <h2>Создание заявки</h2>
+        <form action="requests.html" method="POST">
+            <input type="text" id="rating" name="rating" placeholder="Рейтинг" required>
+            <input type="text" id="age" name="age" placeholder="Возраст" required>
+            <input type="text" id="gender" name="gender" placeholder="Пол" required>
+            <input type="text" id="prime-time" name="prime-time" placeholder="Прайм-тайм" required>
+            <input type="text" id="goal" name="goal" placeholder="Цель" required>
+            <input type="text" id="contact" name="contact" placeholder="Контакты" required>
+            <button type="submit">Создать заявку</button>
+        </form>
+    </div>
+    <script src="../js/create-request.js"></script>
+</body>
+</html>
