@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Авторизация</title>
-    <link rel="stylesheet" href="../css/login.css">
-</head>
-<body>
-    <div class="login-container">
-        <h2>Вход в аккаунт</h2>
-        <form action="../templates/profile.html" method="POST">
-            <input type="text" id="username" name="username" placeholder="Логин" required>
-            <input type="password" id="password" name="password" placeholder="Пароль" required>
-            <button type="submit">Войти</button>
-        </form>
-        <p><a href="../templates/register.html">Ещё не зарегистрированы?</a></p>
+{{ define "content" }}
+<link rel="stylesheet" href="/static/games.css">
+<div class="games-container">
+    <h2>Список игр</h2>
+    <div class="games-list">
+        {{ range . }}
+        <div class="game-card">
+            <h3 class="game-title">{{ .Title }}</h3>
+            <p class="game-genre">Жанр: {{ .Genre }}</p>
+            <p class="game-rating">Рейтинг: {{ if .Rating }}Есть{{ else }}Нет{{ end }}</p>
+        </div>
+        {{ else }}
+        <p>Нет игр</p>
+        {{ end }}
     </div>
-    <script src="../js/login.js"></script>
-</body>
-</html>
+</div>
+{{ end }}
