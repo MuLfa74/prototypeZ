@@ -58,7 +58,7 @@ func RequestsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
-	err = tpl.ExecuteTemplate(&buf, "requests_page", pageData)
+	err = tpl.ExecuteTemplate(&buf, "requests.html", pageData)
 	if err != nil {
 		handleError(w, http.StatusInternalServerError, "Ошибка рендеринга шаблона", err)
 		return
