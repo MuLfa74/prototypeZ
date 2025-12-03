@@ -1,6 +1,7 @@
 package games
 
 import (
+	"bytes"
 	"html/template"
 	"log"
 	"net/http"
@@ -21,9 +22,13 @@ func GamesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tpl.ExecuteTemplate(w, "layout.html", games)
+	var buf bytes.Buffer
+	err = tpl.ExecuteTemplate(&buf, "games_page", games)
 	if err != nil {
-		http.Error(w, "Ошибка рендеринга шаблона", http.StatusInternalServerError)
 		log.Println("Ошибка шаблона:", err)
+		http.Error(w, "Ошибка рендеринга шаблона", http.StatusInternalServerError)
+		return
 	}
+
+	_, _ = buf.WriteTo(w)
 }

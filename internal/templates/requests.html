@@ -1,31 +1,23 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Основная страница</title>
-    <link rel="stylesheet" href="../css/requests.css">
-</head>
-<body>
-    <div class="main-container">
-        <header>
-            <h1>PrototypeZ</h1>
-            <div class="header-buttons">
-                <button onclick="location.href='chat.html'" id="massage"><img src="сообщ.png" alt="Сообщения"></button>
-                <button onclick="location.href='profile.html'" id="profile"><img src="профиля.png" alt="Профиль"></button>
-                <button onclick="location.href='login.html'" id="enter">Войти</button>
-            </div>
-        </header>
-        <button onclick="location.href='create-request.html'" id="button123">Создать заявку</button>
-        <nav>
-            <ul>
-            </ul>
-        </nav>
-        <footer>
-            <p>Контакты: Телефон | Telegram | Почта</p>
-        </footer>
+{{ define "requests_page" }}
+{{ template "header" . }}
+<div class="requests-container">
+    <h2>Запросы для игры {{ .GameTitle }}</h2>
+    <div class="requests-list">
+        {{ range .Requests }}
+        <div class="request-card">
+            <p><strong>Цель:</strong> {{ .Purpose }}</p>
+            <p><strong>Тип:</strong> {{ if .Type }}Долгая{{ else }}Короткая{{ end }}</p>
+            <p><strong>Пол:</strong> {{ if .Sex }}Женский{{ else }}Мужской{{ end }}</p>
+            <p><strong>Возраст:</strong> {{ .Age }}</p>
+            <p><strong>Контакты:</strong> {{ .Contact }}</p>
+            <p><strong>Время активности:</strong> {{ .PrimeTime }}</p>
+            <p><strong>Создано:</strong> {{ .CreatedAt.Format "2006-01-02 15:04" }}</p>
+            <p><strong>Истекает:</strong> {{ .ExpiresAt.Format "2006-01-02 15:04" }}</p>
+        </div>
+        {{ else }}
+        <p>Нет запросов для этой игры</p>
+        {{ end }}
     </div>
-    <script src="../js/requests.js"></script>
-</body>
-</html>
-
+</div>
+{{ template "footer" . }}
+{{ end }}

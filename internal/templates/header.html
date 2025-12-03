@@ -1,4 +1,4 @@
-{{ define "layout.html" }}
+{{ define "header" }}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>prototypeZ</title>
     <link rel="stylesheet" href="/static/style.css">
-    
 </head>
 <body>
     <header>
@@ -19,12 +18,4 @@
     </header>
 
     <main>
-        {{ block "content" . }}{{ end }}
-    </main>
-
-    <footer>
-        <p>Контакты: Телефон | Telegram | Почта</p>
-    </footer>
-</body>
-</html>
 {{ end }}
