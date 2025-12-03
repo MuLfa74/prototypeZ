@@ -1,0 +1,36 @@
+.games-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+.games-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.game-card {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    width: 200px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.game-card:hover {
+    transform: translateY(-3px);
+}
+
+.game-title {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.game-genre,
+.game-rating {
+    font-size: 14px;
+    color: #555;
+}
