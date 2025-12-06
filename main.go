@@ -26,7 +26,7 @@ func main() {
 	// Парсим шаблоны
 	tpl := template.Must(template.ParseGlob("internal/templates/*.html"))
 
-	// Games
+	// Шаблоны модулей
 	games.InitTemplates(tpl)
 	requests.InitTemplates(tpl)
 
@@ -56,6 +56,11 @@ func main() {
 		default:
 			http.NotFound(w, r)
 		}
+	})
+
+	// Роут главной страницы на игры
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/games", http.StatusSeeOther)
 	})
 
 	// Роут игр
