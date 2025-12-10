@@ -9,12 +9,18 @@
 <body>
     <div class="create-request-container">
         <h2>Создание заявки для игры {{ .GameTitle }}</h2>
-        <form action="requests.html" method="POST">
-            <input type="text" id="rating" name="rating" placeholder="Рейтинг" required>
+        <form action="/requests/create_request?game_id={{ .GameID }}" method="POST">
+            <select name="type" required>
+                <option value="0">Короткая</option>
+                <option value="1">Долгая</option>
+            </select>
             <input type="text" id="age" name="age" placeholder="Возраст" required>
-            <input type="text" id="gender" name="gender" placeholder="Пол" required>
+            <select name="sex" required>
+                <option value="0">Муж</option>
+                <option value="1">Жен</option>
+            </select>
             <input type="text" id="prime-time" name="prime-time" placeholder="Прайм-тайм" required>
-            <input type="text" id="goal" name="goal" placeholder="Цель" required>
+            <input type="text" id="purpose" name="purpose" placeholder="Цель" required>
             <input type="text" id="contact" name="contact" placeholder="Контакты" required>
             <button type="submit">Создать заявку</button>
         </form>

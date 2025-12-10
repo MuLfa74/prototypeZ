@@ -15,6 +15,20 @@ func InitCreateTemplate(t *template.Template) {
 }
 
 func CreateRequestHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		renderCreateForm(w, r)
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		handleCreateSubmit(w, r)
+		return
+	}
+
+	http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+}
+
+func renderCreateForm(w http.ResponseWriter, r *http.Request) {
 	gameIDStr := r.URL.Query().Get("game_id")
 	if gameIDStr == "" {
 		http.Error(w, "game_id не указан", http.StatusBadRequest)
@@ -27,14 +41,12 @@ func CreateRequestHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Получаем название игры
 	title, err := GetGameTitleByID(gameID)
 	if err != nil {
 		http.Error(w, "Игра не найдена", http.StatusNotFound)
 		return
 	}
 
-	// Данные которые попадут в шаблон
 	data := struct {
 		GameID    int
 		GameTitle string
@@ -43,14 +55,50 @@ func CreateRequestHandler(w http.ResponseWriter, r *http.Request) {
 		GameTitle: title,
 	}
 
-	// Рендерим шаблон
 	var buf bytes.Buffer
 	err = createTpl.ExecuteTemplate(&buf, "create_request.html", data)
 	if err != nil {
-		log.Println("Ошибка рендеринга create_request:", err)
 		http.Error(w, "Ошибка шаблона", http.StatusInternalServerError)
 		return
 	}
 
 	buf.WriteTo(w)
+}
+
+func handleCreateSubmit(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Ошибка формы", http.StatusBadRequest)
+		return
+	}
+
+	gameID, _ := strconv.Atoi(r.URL.Query().Get("game_id"))
+	userID := 1 // TODO: получить из сессии
+
+	// Забираем данные из формы
+	typeVal := r.FormValue("type") == "1"
+	sexVal := r.FormValue("sex") == "1"
+
+	age, _ := strconv.Atoi(r.FormValue("age"))
+
+	req := Request{
+		GameID:    gameID,
+		UserID:    userID,
+		Type:      typeVal,
+		Purpose:   r.FormValue("purpose"),
+		Sex:       sexVal,
+		Age:       uint8(age),
+		Contact:   r.FormValue("contact"),
+		PrimeTime: r.FormValue("prime-time"),
+	}
+
+	err = CreateNewRequest(req)
+	if err != nil {
+		log.Println("Ошибка записи в БД:", err)
+		http.Error(w, "Ошибка БД", http.StatusInternalServerError)
+		return
+	}
+
+	// после создания → переходим на список заявок
+	http.Redirect(w, r, "/requests?game_id="+strconv.Itoa(gameID), http.StatusSeeOther)
 }
