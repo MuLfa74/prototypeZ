@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+	"log"
 )
 
 type Repository struct {
@@ -14,28 +15,36 @@ func NewRepository(db *sql.DB) *Repository {
 
 type User struct {
 	ID       int64
-	login    string
-	password string
+	Login    string
+	Password string
 }
 
+// Вставка пользователя
 func (r *Repository) CreateUser(login, password string) error {
-	_, err := r.db.Exec(`
-        INSERT INTO users (login, password)
-        VALUES (?, ?)
-    `, login, password)
-	return err
+	res, err := r.db.Exec(
+		"INSERT INTO Users (Login, Password) VALUES (?, ?)",
+		login, password,
+	)
+	if err != nil {
+		log.Println("Error inserting user:", err)
+		return err
+	}
+	id, _ := res.LastInsertId()
+	log.Println("User created with ID:", id)
+	return nil
 }
 
-func (r *Repository) GetByEmail(login string) (*User, error) {
-	row := r.db.QueryRow(`
-        SELECT id, login, password
-        FROM users
-        WHERE login = ?
-    `, login)
+// Получаем пользователя по логину
+func (r *Repository) GetByLogin(login string) (*User, error) {
+	row := r.db.QueryRow(
+		"SELECT id, Login, Password FROM Users WHERE Login = ?",
+		login,
+	)
 
 	var u User
-	err := row.Scan(&u.ID, &u.login, &u.password)
+	err := row.Scan(&u.ID, &u.Login, &u.Password)
 	if err != nil {
+		log.Println("Error fetching user:", err)
 		return nil, err
 	}
 	return &u, nil

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"log"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -10,33 +11,41 @@ type Service struct {
 	repo *Repository
 }
 
-func NewService(repo *Repository) *Service {
-	return &Service{repo: repo}
+func NewService(r *Repository) *Service {
+	return &Service{repo: r}
 }
 
-func (s *Service) Register(email, password, confirm string) error {
+func (s *Service) Register(login, password, confirm string) error {
+	if login == "" || password == "" {
+		return errors.New("логин и пароль обязательны")
+	}
+
 	if password != confirm {
-		return errors.New("password mismatch")
+		return errors.New("пароли не совпадают")
+	}
+
+	if _, err := s.repo.GetByLogin(login); err == nil {
+		return errors.New("пользователь уже существует")
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
+		log.Println("bcrypt error:", err)
 		return err
 	}
 
-	return s.repo.CreateUser(email, string(hash))
+	return s.repo.CreateUser(login, string(hash))
 }
 
-func (s *Service) Login(email, password string) (*User, error) {
-	u, err := s.repo.GetByEmail(email)
+func (s *Service) Login(login, password string) (*User, error) {
+	user, err := s.repo.GetByLogin(login)
 	if err != nil {
-		return nil, errors.New("invalid credentials")
+		return nil, errors.New("неверный логин или пароль")
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
-	if err != nil {
-		return nil, errors.New("invalid credentials")
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		return nil, errors.New("неверный логин или пароль")
 	}
 
-	return u, nil
+	return user, nil
 }

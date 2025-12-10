@@ -12,40 +12,27 @@ import (
 )
 
 func main() {
-	// Загружаем конфигурацию
+	// Загружаем конфиг
 	cfg := config.Load()
 
 	// Подключаем БД
 	database.Connect(cfg)
-
-	// Проверка работы
-	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("pong"))
-	})
+	db := database.DB
+	if db == nil {
+		log.Fatal("DB not initialized")
+	}
 
 	// Парсим шаблоны
 	tpl := template.Must(template.ParseGlob("internal/templates/*.html"))
 
-	// Шаблоны модулей
+	// Инициализация модулей
 	games.InitTemplates(tpl)
 	requests.InitTemplates(tpl)
 
-	// --- AUTH INIT ---
-	authRepo := auth.NewRepository(database.DB)
+	// --- AUTH ---
+	authRepo := auth.NewRepository(db)
 	authService := auth.NewService(authRepo)
-	authHandler := auth.NewHandler(authService)
-
-	// --- AUTH ROUTES ---
-	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodGet:
-			authHandler.ShowLogin(w, r)
-		case http.MethodPost:
-			authHandler.HandleLogin(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	})
+	authHandler := auth.NewHandler(authService, tpl)
 
 	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
@@ -58,14 +45,27 @@ func main() {
 		}
 	})
 
-	// Роут главной страницы на игры
+	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			authHandler.ShowLogin(w, r)
+		case http.MethodPost:
+			authHandler.HandleLogin(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
+
+	// Главная страница редирект на /games
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/games", http.StatusSeeOther)
 	})
 
-	// Роут игр
+	// Роуты модулей
 	http.HandleFunc("/games", games.GamesHandler)
 	http.HandleFunc("/requests", requests.RequestsHandler)
+
+	// Статика
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Server started on :8080")

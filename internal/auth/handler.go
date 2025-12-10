@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"path/filepath"
 )
 
 type Handler struct {
@@ -12,9 +11,11 @@ type Handler struct {
 	templates *template.Template
 }
 
-func NewHandler(service *Service) *Handler {
-	tmpl := template.Must(template.ParseGlob(filepath.Join("internal", "templates", "*.html")))
-	return &Handler{service: service, templates: tmpl}
+func NewHandler(s *Service, tpl *template.Template) *Handler {
+	return &Handler{
+		service:   s,
+		templates: tpl,
+	}
 }
 
 func (h *Handler) ShowLogin(w http.ResponseWriter, r *http.Request) {
@@ -27,10 +28,10 @@ func (h *Handler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	email := r.FormValue("email")
+	login := r.FormValue("login")
 	password := r.FormValue("password")
 
-	user, err := h.service.Login(email, password)
+	user, err := h.service.Login(login, password)
 	if err != nil {
 		h.templates.ExecuteTemplate(w, "login.html", map[string]any{
 			"Error": "Неверный логин или пароль",
@@ -57,11 +58,11 @@ func (h *Handler) HandleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	email := r.FormValue("email")
+	login := r.FormValue("login")
 	password := r.FormValue("password")
 	confirm := r.FormValue("confirm")
 
-	if err := h.service.Register(email, password, confirm); err != nil {
+	if err := h.service.Register(login, password, confirm); err != nil {
 		h.templates.ExecuteTemplate(w, "register.html", map[string]any{
 			"Error": err.Error(),
 		})

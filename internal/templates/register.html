@@ -4,18 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="static/register.css">
+    <link rel="stylesheet" href="/static/register.css">
 </head>
 <body>
     <div class="register-container">
         <h2>Регистрация</h2>
-        <form action="/login" method="POST">
-            <input type="text" id="username" name="username" placeholder="Логин" required>
+
+        {{if .Error}}
+        <div class="error">{{.Error}}</div>
+        {{end}}
+
+        <form action="/register" method="POST">
+            <input type="text" id="login" name="login" placeholder="Логин" required>
             <input type="password" id="password" name="password" placeholder="Пароль" required>
-            <input type="password" id="confirm-password" name="confirm-password" placeholder="Повторите пароль" required>
+            <input type="password" id="confirm" name="confirm" placeholder="Повторите пароль" required>
             <button type="submit">Зарегистрироваться</button>
         </form>
+
+        <p>Уже есть аккаунт? <a href="/login">Войти</a></p>
     </div>
-    <script src="../js/register.js"></script>
+    <script src="/static/js/register.js"></script>
 </body>
 </html>
