@@ -22,8 +22,8 @@
         <h2>Список игр</h2>
         <nav>
         <ul>
+        {{ range . }}
         <li>
-            {{ range . }}
             <a href="/requests?game_id={{ .ID }}">
                 <div class="game-card">
                     <h3 class="game-title">{{ .Title }}</h3>
@@ -31,10 +31,10 @@
                     <p class="game-rating">Рейтинг: {{ if .Rating }}Есть{{ else }}Нет{{ end }}</p>
                 </div>
             </a>
-            {{ else }}
-            <p>Нет игр</p>
-            {{ end }}
         </li>
+        {{ else }}
+        <p>Нет игр</p>
+        {{ end }}
         </ul>
         </nav>
     </div>

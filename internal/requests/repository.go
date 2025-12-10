@@ -32,3 +32,5 @@ func GetGameTitle(gameID int) (string, error) {
 	}
 	return title, nil
 }
+
+func InsertRequestByGame() {}

@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Создание заявки</title>
-    <link rel="stylesheet" href="../css/create-request.css">
+    <link rel="stylesheet" href="/static/create-request.css">
 </head>
 <body>
     <div class="create-request-container">
-        <h2>Создание заявки</h2>
+        <h2>Создание заявки для игры {{ .GameTitle }}</h2>
         <form action="requests.html" method="POST">
             <input type="text" id="rating" name="rating" placeholder="Рейтинг" required>
             <input type="text" id="age" name="age" placeholder="Возраст" required>

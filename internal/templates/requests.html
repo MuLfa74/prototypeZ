@@ -18,7 +18,7 @@
     </header>
     
     <h2>Запросы для игры {{ .GameTitle }}</h2>
-    <button onclick="location.href='create-request'" id="button123">Создать заявку</button>
+    <button onclick="location.href='/requests/create_request?game_id={{ .GameID }}'" id="button123">Создать заявку</button>
 
     <nav>
         <ul>
