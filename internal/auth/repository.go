@@ -13,28 +13,28 @@ func NewRepository(db *sql.DB) *Repository {
 }
 
 type User struct {
-	ID           int64
-	Email        string
-	PasswordHash string
+	ID       int64
+	login    string
+	password string
 }
 
-func (r *Repository) CreateUser(email, passwordHash string) error {
+func (r *Repository) CreateUser(login, password string) error {
 	_, err := r.db.Exec(`
         INSERT INTO users (login, password)
         VALUES (?, ?)
-    `, email, passwordHash)
+    `, login, password)
 	return err
 }
 
-func (r *Repository) GetByEmail(email string) (*User, error) {
+func (r *Repository) GetByEmail(login string) (*User, error) {
 	row := r.db.QueryRow(`
-        SELECT id, email, password_hash
+        SELECT id, login, password
         FROM users
-        WHERE email = ?
-    `, email)
+        WHERE login = ?
+    `, login)
 
 	var u User
-	err := row.Scan(&u.ID, &u.Email, &u.PasswordHash)
+	err := row.Scan(&u.ID, &u.login, &u.password)
 	if err != nil {
 		return nil, err
 	}
