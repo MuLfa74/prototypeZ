@@ -32,3 +32,22 @@ func GetGameTitle(gameID int) (string, error) {
 	}
 	return title, nil
 }
+
+func CreateRequest(r Request) error {
+	_, err := database.DB.Exec(`
+        INSERT INTO Request 
+        (gameid, userid, type, purpose, sex, age, contact, primetime, created_at, expires_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 24 HOUR))
+    `,
+		r.GameID,
+		r.UserID,
+		r.Type,
+		r.Purpose,
+		r.Sex,
+		r.Age,
+		r.Contact,
+		r.PrimeTime,
+	)
+
+	return err
+}

@@ -7,3 +7,7 @@ func GetRequestsForGame(gameID int) ([]Request, error) {
 func GetGameTitleByID(gameID int) (string, error) {
 	return GetGameTitle(gameID)
 }
+
+func CreateNewRequest(r Request) error {
+	return CreateRequest(r)
+}

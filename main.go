@@ -28,6 +28,7 @@ func main() {
 	// Инициализация модулей
 	games.InitTemplates(tpl)
 	requests.InitTemplates(tpl)
+	requests.InitCreateTemplate(tpl)
 
 	// --- AUTH ---
 	authRepo := auth.NewRepository(db)
@@ -64,8 +65,6 @@ func main() {
 	// Роуты модулей
 	http.HandleFunc("/games", games.GamesHandler)
 	http.HandleFunc("/requests", requests.RequestsHandler)
-
-	// Статика
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Server started on :8080")

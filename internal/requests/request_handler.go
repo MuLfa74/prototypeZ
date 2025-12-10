@@ -15,11 +15,6 @@ func InitTemplates(t *template.Template) {
 	tpl = t
 }
 
-type RequestsPageData struct {
-	GameTitle string
-	Requests  []Request
-}
-
 func handleError(w http.ResponseWriter, statusCode int, message string, err error) {
 	http.Error(w, message, statusCode)
 	if err != nil {
@@ -53,6 +48,7 @@ func RequestsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pageData := RequestsPageData{
+		GameID:    gameID,
 		GameTitle: gameTitle,
 		Requests:  reqs,
 	}

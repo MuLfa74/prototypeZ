@@ -43,8 +43,9 @@ func (s *Service) Login(login, password string) (*User, error) {
 		return nil, errors.New("неверный логин или пароль")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		return nil, errors.New("неверный логин или пароль")
+	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
+	if err != nil {
+		return nil, errors.New("invalid credentials")
 	}
 
 	return user, nil
