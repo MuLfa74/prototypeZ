@@ -79,11 +79,7 @@ func main() {
 
 	http.HandleFunc("/games", games.GamesHandler)
 	http.HandleFunc("/requests", requests.RequestsHandler)
-<<<<<<< HEAD
-
-=======
 	http.HandleFunc("/requests/create_request", requests.CreateRequestHandler)
->>>>>>> 2a95ba82677a01e3cd025bdc7cba4d43ba8e5274
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Server started on :8080")
