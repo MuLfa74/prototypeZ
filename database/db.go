@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"prototypeZ/config"
 
@@ -11,7 +12,8 @@ import (
 var DB *sql.DB
 
 func Connect(cfg *config.Config) *sql.DB {
-	dsn := cfg.DBUser + ":" + cfg.DBPassword + "@tcp(" + cfg.DBHost + ")/" + cfg.DBName
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal("DB connection error:", err)

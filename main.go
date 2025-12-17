@@ -65,6 +65,7 @@ func main() {
 	// Роуты модулей
 	http.HandleFunc("/games", games.GamesHandler)
 	http.HandleFunc("/requests", requests.RequestsHandler)
+	http.HandleFunc("/requests/create_request", requests.CreateRequestHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Server started on :8080")
