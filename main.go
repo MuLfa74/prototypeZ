@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+
 	"prototypeZ/config"
 	"prototypeZ/database"
 	"prototypeZ/internal/auth"
@@ -12,61 +13,75 @@ import (
 )
 
 func main() {
-	// Загружаем конфиг
 	cfg := config.Load()
 
-	// Подключаем БД
 	database.Connect(cfg)
 	db := database.DB
 	if db == nil {
 		log.Fatal("DB not initialized")
 	}
 
-	// Парсим шаблоны
 	tpl := template.Must(template.ParseGlob("internal/templates/*.html"))
 
-	// Инициализация модулей
 	games.InitTemplates(tpl)
 	requests.InitTemplates(tpl)
 	requests.InitCreateTemplate(tpl)
 
-	// --- AUTH ---
 	authRepo := auth.NewRepository(db)
 	authService := auth.NewService(authRepo)
 	authHandler := auth.NewHandler(authService, tpl)
 
 	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodGet:
+		if r.Method == http.MethodGet {
 			authHandler.ShowRegister(w, r)
-		case http.MethodPost:
-			authHandler.HandleRegister(w, r)
-		default:
-			http.NotFound(w, r)
+			return
 		}
+		if r.Method == http.MethodPost {
+			authHandler.HandleRegister(w, r)
+			return
+		}
+		http.NotFound(w, r)
 	})
 
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodGet:
+		if r.Method == http.MethodGet {
 			authHandler.ShowLogin(w, r)
-		case http.MethodPost:
+			return
+		}
+		if r.Method == http.MethodPost {
 			authHandler.HandleLogin(w, r)
-		default:
-			http.NotFound(w, r)
+			return
+		}
+		http.NotFound(w, r)
+	})
+
+	// ПРОФИЛЬ
+	http.HandleFunc("/profile", func(w http.ResponseWriter, r *http.Request) {
+		c, err := r.Cookie("user_id")
+		if err != nil {
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
+		}
+
+		data := map[string]any{
+			"UserID": c.Value,
+		}
+
+		err = tpl.ExecuteTemplate(w, "profile.html", data)
+		if err != nil {
+			http.Error(w, "Ошибка загрузки профиля", http.StatusInternalServerError)
 		}
 	})
 
-	// Главная страница редирект на /games
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/games", http.StatusSeeOther)
 	})
 
-	// Роуты модулей
 	http.HandleFunc("/games", games.GamesHandler)
 	http.HandleFunc("/requests", requests.RequestsHandler)
+
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Server started on :8080")
-	http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

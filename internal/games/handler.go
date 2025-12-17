@@ -1,9 +1,7 @@
 package games
 
 import (
-	"bytes"
 	"html/template"
-	"log"
 	"net/http"
 )
 
@@ -13,22 +11,27 @@ func InitTemplates(t *template.Template) {
 	tpl = t
 }
 
-// GamesHandler отображает список игр
+type PageData struct {
+	UserID string
+	Games  any
+}
+
 func GamesHandler(w http.ResponseWriter, r *http.Request) {
 	games, err := GetGamesList()
 	if err != nil {
 		http.Error(w, "Ошибка получения игр", http.StatusInternalServerError)
-		log.Println("Ошибка в GamesHandler:", err)
 		return
 	}
 
-	var buf bytes.Buffer
-	err = tpl.ExecuteTemplate(&buf, "games.html", games)
-	if err != nil {
-		log.Println("Ошибка шаблона:", err)
-		http.Error(w, "Ошибка рендеринга шаблона", http.StatusInternalServerError)
-		return
+	var userID string
+	if c, err := r.Cookie("user_id"); err == nil {
+		userID = c.Value
 	}
 
-	_, _ = buf.WriteTo(w)
+	data := PageData{
+		UserID: userID,
+		Games:  games,
+	}
+
+	tpl.ExecuteTemplate(w, "games.html", data)
 }

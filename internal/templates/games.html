@@ -2,27 +2,28 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>prototypeZ</title>
+    <title>PrototypeZ</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="main-container">
-    <header>
-        <h1>PrototypeZ</h1>
-        <div class="header-buttons">
-            <button onclick="location.href='chat'" id="massage">чат</button>
-            <button onclick="location.href='profile'" id="profile">профиль</button>
-            <button onclick="location.href='login'" id="enter">Войти</button>
-        </div>
-    </header>
 
-    <body>
-        <div class="games-container">
+<div class="main-container">
+<header>
+    <h1>PrototypeZ</h1>
+    <div class="header-buttons">
+        {{ if .UserID }}
+            <button onclick="location.href='/profile'">Профиль</button>
+        {{ else }}
+            <button onclick="location.href='/login'">Войти</button>
+        {{ end }}
+    </div>
+</header>
+
+<div class="games-container">
         <h2>Список игр</h2>
         <nav>
         <ul>
-        {{ range . }}
+        {{ range .Games }}
         <li>
             <a href="/requests?game_id={{ .ID }}">
                 <div class="game-card">
@@ -39,9 +40,10 @@
         </nav>
     </div>
 
-    <footer>
-        <p>Контакты: Телефон | Telegram | Почта</p>
-    </footer>
-    </div>
+<footer>
+    <p>Контакты</p>
+</footer>
+</div>
+
 </body>
 </html>
