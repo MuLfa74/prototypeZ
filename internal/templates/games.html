@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>PrototypeZ</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="main-container">
+<header>
+    <h1>PrototypeZ</h1>
+    <div class="header-buttons">
+        {{ if .UserID }}
+            <button onclick="location.href='/profile'">Профиль</button>
+        {{ else }}
+            <button onclick="location.href='/login'">Войти</button>
+        {{ end }}
+    </div>
+</header>
+
+<div class="games-container">
+        <h2>Список игр</h2>
+        <nav>
+        <ul>
+        {{ range .Games }}
+        <li>
+            <a href="/requests?game_id={{ .ID }}">
+                <div class="game-card">
+                    <h3 class="game-title">{{ .Title }}</h3>
+                    <p class="game-genre">Жанр: {{ .Genre }}</p>
+                    <p class="game-rating">Рейтинг: {{ if .Rating }}Есть{{ else }}Нет{{ end }}</p>
+                </div>
+            </a>
+        </li>
+        {{ else }}
+        <p>Нет игр</p>
+        {{ end }}
+        </ul>
+        </nav>
+    </div>
+
+<footer>
+    <p>Контакты</p>
+</footer>
+</div>
+
+</body>
+</html>
